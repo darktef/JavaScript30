@@ -9,9 +9,9 @@
 
     <div class="clock">
       <div class="clock-face">
-        <div class="hand hour-hand"></div>
-        <div class="hand min-hand"></div>
-        <div class="hand second-hand"></div>
+        <div class="hand hour-hand" id="hours"></div>
+        <div class="hand min-hand" id="minutes"></div>
+        <div class="hand second-hand" id="seconds"></div>
       </div>
     </div>
 
@@ -61,12 +61,39 @@
       background:black;
       position: absolute;
       top:50%;
+      /* put the pivot point at the right hand side */
+      transform-origin: 100%;
+      transform: rotate(90deg);
+      transition: all 0.05s;
+      transition-timing-function: cubic-bezier(0.1, 2.7, 0.58, 1);
     }
 
   </style>
 
   <script>
+    const secondHand = document.querySelector('.second-hand');
+    const minuteHand = document.querySelector('.min-hand');
+    const hourHand = document.querySelector('.hour-hand');
 
+    function setDate() {
+      const now = new Date();
+      const seconds = now.getSeconds();
+      const minutes = now.getMinutes();
+      const hours = now.getHours() > 12 ? now.getHours() - 12 : now.getHours();
+      if (seconds == 59) {
+        secondHand.style.transtion = 'initial';
+      } else if (seconds == 1) {
+        secondHand.style.transtion = 'all 0.05s';
+      }
+
+      secondHand.style.transform = `rotate(${seconds*6+90}deg)`;
+      minuteHand.style.transform = `rotate(${minutes*6+90}deg)`;
+      hourHand.style.transform = `rotate(${hours/12*360+90}deg)`;
+    }
+
+    setInterval(setDate, 1000)
+
+    setDate()
 
   </script>
 </body>
