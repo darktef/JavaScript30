@@ -1,97 +1,130 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Type Ahead 👀</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8">
+    <title>Type Ahead 👀</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <form class="search-form">
+      <input type="text" class="search" placeholder="City or State">
+      <button onclick="geoFindMe()">Tune my results with my location</button>
+      <div id="myLocation"></div>
+      <ul class="suggestions">
+        <li>Filter for a city</li>
+        <li>or a state</li>
+      </ul>
+    </form>
+    <script>
+      const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+      const cities = [];
+      const searchInput = document.querySelector('.search')
+      const suggestions = document.querySelector('.suggestions')
+      const noResultHtml = `<li>Sorry, we did not find anything</li>`
+      const initialHtml = `<li>Please enter word to find any matched city or state</li>`
 
-  <form class="search-form">
-    <input type="text" class="search" placeholder="City or State">
-    <ul class="suggestions">
-      <li>Filter for a city</li>
-      <li>or a state</li>
-    </ul>
-  </form>
-<script>
-  const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
-  const cities = [];
-  const searchInput = document.querySelector('.search')
-  const suggestions = document.querySelector('.suggestions')
-  const noResultHtml = `<li>Sorry, we did not find anything</li>`
-  const initialHtml = `<li>Please enter word to find any matched city or state</li>`
-
-  function numberWithCommas(x) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-  }
-
-  fetch(endpoint)
-    .then(blob => blob.json())
-    .then(res => cities.push(...res))
-
-  // here we need to figure out if the city or state matches what was searched
-  function findMatches(word) {
-    return cities.filter(place => {
-      // my solution
-      // var wordToMatch = word.toLowerCase()
-      // return (place.city.toLowerCase().includes(word) || place.state.toLowerCase().includes(word))
-
-      // g - global, i - insensitive
-      const regex = new RegExp(word, 'gi')
-      return place.city.match(regex) || place.state.match(regex)
-    })
-  }
-
-  function displayMatches(word, results){
-    // my solution, just want to practise document fragment...
-    // var docfrag = document.createDocumentFragment()
-
-    // results.map(place => {
-    //   var li = document.createElement('li')
-    //   li.textContent = `${place.city}, ${place.state}`
-    //   docfrag.appendChild(li)
-    // });
-
-    // suggestions.innerHTML = ""
-    // suggestions.appendChild(docfrag)
-
-    // his solution...it seems like I like it better
-
-    const html = results.map(result => {
-      const regex = new RegExp(word, 'gi')
-      const cityName = result.city.replace(regex, `<span class="hl">${word}</span>` )
-      const stateName = result.state.replace(regex, `<span class="hl">${word}</span>` )
-      return `
-        <li>
-          <span class='name'>${cityName}, ${stateName}</span>
-          <span class='population'>${numberWithCommas(result.population)}</span>
-        </li>
-      `
-    }).join('')
-
-    suggestions.innerHTML = html
-  }
-
-  function typeahead () {
-    if (this.value) {
-      var searchResult = findMatches(this.value)
-      if(searchResult.length > 0) {
-        // if find sth
-        displayMatches(this.value,searchResult)
-      } else {
-        // if no search result returned
-        suggestions.innerHTML = noResultHtml
+      function numberWithCommas(x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
       }
-    } else {
-      // if user happen to delete the entire word
-      suggestions.innerHTML = initialHtml
-    }
-  }
 
-  searchInput.addEventListener('keyup', typeahead)
-  searchInput.addEventListener('change', typeahead)
+      // ref: https://developer.mozilla.org/en-US/docs/Web/API/Geolocation/Using_geolocation
+      // it does not seem playing well with local files
+      // const output = document.getElementById('myLocation')
 
-</script>
+      // function geoFindMe() {
+      //   if(!navigator.geolocation) {
+      //     output.innerHTML = "<p>Geolocation is not supported by your browser</p>"
+      //   }
+
+      //   function success(position) {
+      //     console.log('success callback')
+      //     var latitude = position.coords.latitude;
+      //     var longitude = position.coords.longitude;
+
+      //     output.innerHTML = `<p>Latitude is ${latitude}</p><p>Longitude is ${longitude}</p>`
+
+      //     var img = new Image()
+      //     img.src = `https://maps.googleapis.com/maps/api/staticmap?center=${latitude},${longitude}&zoom=13&size=300x300&sensor=false`
+
+      //     output.appendChild(img)
+      //   }
+
+      //   function error() {
+      //     console.log('error callback')
+      //     output.innerHTML = '<p>Unable to retrieve your location</p>'
+      //   }
+
+      //   output.innerHTML = '<p>Locating...</p>'
+
+      //   navigator.geolocation.getCurrentPosition(success,error)
+      // }
+
+      fetch(endpoint)
+        .then(blob => blob.json())
+        .then(res => cities.push(...res))
+
+      // here we need to figure out if the city or state matches what was searched
+      function findMatches(word) {
+        return cities.filter(place => {
+          // my solution
+          // var wordToMatch = word.toLowerCase()
+          // return (place.city.toLowerCase().includes(word) || place.state.toLowerCase().includes(word))
+
+          // g - global, i - insensitive
+          const regex = new RegExp(word, 'gi')
+          return place.city.match(regex) || place.state.match(regex)
+        })
+      }
+
+      function displayMatches(word, results){
+        // my solution, just want to practise document fragment...
+        // var docfrag = document.createDocumentFragment()
+
+        // results.map(place => {
+        //   var li = document.createElement('li')
+        //   li.textContent = `${place.city}, ${place.state}`
+        //   docfrag.appendChild(li)
+        // });
+
+        // suggestions.innerHTML = ""
+        // suggestions.appendChild(docfrag)
+
+        // his solution...it seems like I like it better
+
+        const html = results.map(result => {
+          const regex = new RegExp(word, 'gi')
+          const cityName = result.city.replace(regex, `<span class="hl">${word}</span>` )
+          const stateName = result.state.replace(regex, `<span class="hl">${word}</span>` )
+          return `
+            <li>
+              <span class='name'>${cityName}, ${stateName}</span>
+              <span class='population'>${numberWithCommas(result.population)}</span>
+            </li>
+          `
+        }).join('')
+
+        suggestions.innerHTML = html
+      }
+
+      function typeahead () {
+        if (this.value) {
+          var searchResult = findMatches(this.value)
+          if(searchResult.length > 0) {
+            // if find sth
+            displayMatches(this.value,searchResult)
+          } else {
+            // if no search result returned
+            suggestions.innerHTML = noResultHtml
+          }
+        } else {
+          // if user happen to delete the entire word
+          suggestions.innerHTML = initialHtml
+        }
+      }
+
+      searchInput.addEventListener('keyup', typeahead)
+      searchInput.addEventListener('change', typeahead)
+
+    </script>
   </body>
 </html>
