@@ -26,15 +26,37 @@
 
     // Some and Every Checks
     // Array.prototype.some() // is at least one person 19 or older?
+    const currentYear = (new Date()).getFullYear()
+    // notice u could add curly brace to display both name and value of the variable
+    console.log({currentYear})
+    // implicit return
+    const over19 = people.some(person => (currentYear - person.year) >= 19)
     // Array.prototype.every() // is everyone 19 or older?
+    const allAdults = people.every(person => (currentYear - person.year) >= 19)
 
     // Array.prototype.find()
     // Find is like filter, but instead returns just the one you are looking for
+    // whereas, filter will return a subset of the array
     // find the comment with the ID of 823423
+    const theComment = comments.find(comment => comment.id === 823423)
 
     // Array.prototype.findIndex()
     // Find the comment with this ID
     // delete the comment with the ID of 823423
+    const indexComment = comments.findIndex(comment => comment.id == 823423)
+    // according to wes, this is popular in redux world
+    // probably cuz we do not mutate the original array?
+    // and use ... (spread array) to make sure u did not create a two dimensional array
+    const newComments = [
+      ...comments.slice(0,indexComment),
+      ...comments.slice(indexComment + 1)
+    ]
+    // note: u could do this {} as well, but it will just mess up the result...
+    console.table(newComments)
+    // traditional way which u mutate the original array
+    comments.splice(indexComment,1)
+    console.table(comments)
+
 
   </script>
 </body>
