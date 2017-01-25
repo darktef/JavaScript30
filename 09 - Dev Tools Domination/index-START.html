@@ -19,27 +19,87 @@
 
     // Regular
 
+    console.log('hello')
+
     // Interpolated
+
+    console.log('Hello I am a %s string!', '+pop')
+
+    const name = 'world'
+
+    console.log(`Hello ${name}`)
 
     // Styled
 
+    console.log('%c I am some great text', 'font-size: 5px; background: red;')
+
     // warning!
 
+    console.warn('OH NOO')
+
     // Error :|
+    console.error('There is an error')
 
     // Info
+    console.info('Crocodiles eat 3-4 people per year')
 
     // Testing
 
+    // if it is true nothing will happen
+    console.assert(1 === 1, 'That is wrong!')
+    console.assert(2 === 1, '2 does not equal to 1')
+
     // clearing
+
+    console.clear()
+
 
     // Viewing DOM Elements
 
+    const p = document.querySelector('p')
+
+    console.log(p)
+    console.dir(p)
+
     // Grouping together
+
+    console.clear()
+
+    dogs.forEach(dog => {
+      // console.group(`${dog.name}`)
+      console.groupCollapsed(`${dog.name}`)
+      console.log(`This is ${dog.name}`)
+      console.log(`${dog.name} is ${dog.age} year old`)
+      console.log(`${dog.name} is ${dog.age * 7} dog years old`)
+      console.groupEnd(`${dog.name}`)
+    })    
 
     // counting
 
+    console.count('Wes');
+    console.count('Wes');
+    console.count('Steve');
+    console.count('Wes');
+    console.count('Wes');
+    console.count('Steve');
+    console.count('Wes');
+
     // timing
+
+    console.time('fetching data');
+    fetch('https://api.github.com/users/darktef')
+      .then(data => data.json())
+      .then(data => {
+        console.timeEnd('fetching data');
+        console.log(data)
+      });
+
+    // used it in the project to measure performance, handy but not sure whether it is truely that useful...
+    // he mentioned the performance.now()
+
+
+
+    console.table(dogs)
 
   </script>
 </body>
