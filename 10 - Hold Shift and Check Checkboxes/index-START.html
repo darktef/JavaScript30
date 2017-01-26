@@ -104,6 +104,28 @@
   </div>
 
 <script>
+  const inputs =  document.querySelectorAll('input')
+
+  function checkMultiple() {
+    var start = false
+    inputs.forEach(input => {
+      if (input.checked) {
+        start = !start
+      } else if (!input.checked && start) {
+        input.checked = true
+      }
+    })
+  }
+
+  function mouseClick(e) {
+    if (e.shiftKey) {
+      console.info('shift key + click')
+      checkMultiple()
+    }
+  }
+
+  inputs.forEach( input => input.addEventListener('click', mouseClick))
+
 </script>
 </body>
 </html>
