@@ -76,3 +76,16 @@
       outline:0;
       border:1px solid rgba(0,0,0,0.1);
     }
+
+    .actions {
+      margin-top: 10px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .actions button {
+      padding:10px;
+      outline:0;
+      border:1px solid rgba(0,0,0,0.1);
+      background: #c6d5d8;
+    }

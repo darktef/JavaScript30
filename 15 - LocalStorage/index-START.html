@@ -23,12 +23,93 @@
       <input type="text" name="item" placeholder="Item Name" required>
       <input type="submit" value="+ Add Item">
     </form>
+    <div class='actions'>
+      <button name='reset'>Clear</button>
+      <button name='checkAll'>Check All</button>
+      <button name='uncheckAll'>Uncheck All</button>
+    </div>
   </div>
 
 <script>
   const addItems = document.querySelector('.add-items');
   const itemsList = document.querySelector('.plates');
-  const items = [];
+  var items = JSON.parse(localStorage.getItem('items')) || [];
+  const resetButton = document.querySelector('[name=reset]')
+  const checkButton = document.querySelector('[name=checkAll]')
+  const uncheckButton = document.querySelector('[name=uncheckAll]')
+
+
+  function addItem(e) {
+    e.preventDefault()
+    // const text= e.target[0].value
+    const text = this.querySelector('[name=item]').value
+    const item = {
+      text, //ES6 shorthand property
+      done: false
+    }
+    items.push(item)
+    // native function for form element, to clear out its input element
+    populateList(items, itemsList)
+    // local storage will only store strings
+    localStorage.setItem('items', JSON.stringify(items))
+    this.reset();
+    // console.table(items)
+  }
+
+  function populateList(plates = [], platesList) {
+    platesList.innerHTML = plates.map((plate, i) => {
+      return `
+        <li>
+          <input type="checkbox" data-index="${i}" id="item${i}" ${plate.done ? 'checked': ''}/>
+          <label for="item${i}">${plate.text}</label>
+        </li>
+      `;
+    }).join('');
+  }
+
+  function toggleDone (e) {
+    if (!e.target.matches('input')) return; // skip the non-input click
+    // .matches is the new API method for browser
+    // just like .in in jQuery
+    items[e.target.dataset['index']].done = e.target.checked
+    localStorage.setItem('items', JSON.stringify(items))
+    // console.table(items)
+  }
+
+  function resetList () {
+    itemsList.innerHTML = ''
+    items = []
+    localStorage.removeItem('items')
+  }
+
+  function toggelCheck (e) {
+    state = e.target.name == 'checkAll' ? true : false
+    items.forEach( item => {
+      item.done = state
+    })
+    populateList(items, itemsList)
+    localStorage.setItem('items', JSON.stringify(items))
+  }
+
+
+  populateList(items, itemsList)
+
+  addItems.addEventListener('submit', addItem)
+
+  // event delegation
+  // let the responsible parent deal with the neglected child's todo
+  // listen to something higher
+  // this is due to the child element created dynamically
+  // would not be able to add event listener before hand, 
+  // u could probably add the event listener while you create the input checkbox
+  // but it is verbose, so it is better to do the event delegation
+  itemsList.addEventListener('click', toggleDone)
+  resetButton.addEventListener('click', resetList)
+  checkButton.addEventListener('click', toggelCheck)
+  uncheckButton.addEventListener('click', toggelCheck)
+
+
+
 
 </script>
 
