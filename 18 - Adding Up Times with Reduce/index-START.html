@@ -182,6 +182,60 @@
     </li>
   </ul>
 <script>
+  // my solution, so dirty, really need refactoring
+  // const videos = document.querySelectorAll('.videos li')
+  // const times = []
+  // videos.forEach(video => times.push(convertTime(video.dataset.time)));
+
+  // function convertTime (timeStr) {
+  //   // assume there r only minutes, but not hours
+  //   return timeStr.split(':').map( t => parseInt(t))
+  // }
+
+  // const nums = times.reduce((prev, curr) => [prev[0] + curr[0], prev[1] + curr[1]])
+
+  // const result = `${parseInt((parseInt(nums[1]/60) + nums[0])/60)} : ${(parseInt(nums[1]/60)+nums[0])%60} : ${nums[1]%60}` 
+
+  // console.log(result)
+
+  const videos = [...document.querySelectorAll('[data-time]')]
+
+  function convertSec (timeStr) {
+    let [mins, secs] = timeStr.split(':').map(parseFloat)
+    return (mins * 60 + secs)
+  }
+
+  let secondsLeft = videos.reduce((prev, curr) => {
+    return prev + convertSec(curr.dataset.time)
+  }, 0)
+
+  const hours = Math.floor(secondsLeft/3600)
+  secondsLeft = secondsLeft%3600
+  const minutes = Math.floor(secondsLeft/60)
+  secondsLeft = secondsLeft%60
+  
+
+
+  // turn it from nodelist to array
+  // const timeNodes = Array.from(document.querySelectorAll('[data-time]'))
+  // // const timeNodes = [...document.querySelectorAll('[data-time]')]
+
+  // const seconds = timeNodes
+  //   .map(node => node.dataset.time)
+  //   .map(timeCode => {
+  //     const [mins, secs] = timeCode.split(':').map(parseFloat);
+  //     return (mins * 60 + secs)
+  //   })
+  //   .reduce((total, vidSeconds) => total + vidSeconds)
+
+  // let secondsLeft = seconds;
+  // const hours = Math.floor(secondsLeft/3600)
+  // secondsLeft = secondsLeft%3600
+  // const minutes = Math.floor(secondsLeft/60)
+  // secondsLeft = secondsLeft%60
+
+  console.log(`${hours} : ${minutes} : ${secondsLeft}`)
+
 </script>
 </body>
 </html>
