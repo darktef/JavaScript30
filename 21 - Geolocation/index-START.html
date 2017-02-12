@@ -57,6 +57,16 @@
     /*Compass: https://thenounproject.com/search/?q=compass&i=592352*/
   </style>
   <script>
+    const arrow = document.querySelector('.arrow')
+    const speed = document.querySelector('.speed')
+
+    navigator.geolocation.watchPosition((data) => {
+      speed.textContent = data.coords.speed
+      arrow.style.transform = `rotate(${data.coords.heading}deg)`
+    }, (err) => {
+      console.err(err)
+      alert('Hey! U block the geolocation info.')
+    })
   </script>
 </body>
 </html>
