@@ -26,3 +26,9 @@ These are meant to be 1:1 copies of what is done in the video. If you found a be
 The starter files + solutions will be updated if/when the videos are updated. 
 
 Thanks!
+
+## Random Notes
+
+- 22. Follow Along Link Highlighter
+  + getBoundingClientRect()
+  + need to learn more about the transform and translate
