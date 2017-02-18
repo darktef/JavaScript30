@@ -13,11 +13,17 @@
     </div>
   </div>
 
+  <button>Click Once!</button>
+
 <style>
   html {
     box-sizing: border-box;
   }
   *, *:before, *:after { box-sizing: inherit; }
+
+  body {
+    text-align: center;
+  }
 
   div {
     width:100%;
@@ -35,11 +41,43 @@
   .three {
     background:coral;
   }
+
+  button {
+    height: 30px;
+    width: 100px;
+    margin-top: 10px;
+    border-radius: 8px;
+    background: skyblue;
+  }
+
 </style>
 
-<button></button>
-<script>
 
+<script>
+  // capture -> capture the event downward
+  // bubbling -> trigger the event upward
+  const divs = document.querySelectorAll('div')
+  const button = document.querySelector('button')
+
+  function logText (e) {
+    // stop bubbling this event up / stop capturing this event down
+    // e.stopPropagation()
+    console.log(this)
+  }
+
+  divs.forEach( div => div.addEventListener('click', logText));
+  // capture the event downward
+  // normaly, capture is set to false
+  // divs.forEach( div => div.addEventListener('click', logText, {
+  //   capture: true
+  // }));
+
+  // the event listener will only happen once
+  // it will unbind itself after get called
+  // special case: store checkout
+  button.addEventListener('click', logText, {
+    once: true
+  })
 </script>
 </body>
 </html>
