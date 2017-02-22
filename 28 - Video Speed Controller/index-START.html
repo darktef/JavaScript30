@@ -15,6 +15,43 @@
   </div>
 
 <script>
+  const video = document.querySelector('video')
+  const speed = document.querySelector('.speed')
+  const speedBar = document.querySelector('.speed-bar')
+  let isDown = false
+
+  speed.addEventListener('mousedown', (e) => {
+    isDown = true
+  })
+
+  speed.addEventListener('mouseleave', (e) => {
+    isDown = false
+    
+  })
+
+  speed.addEventListener('mouseup', (e) => {
+    isDown = false
+    
+  })
+
+  speed.addEventListener('mousemove', (e) => {
+    if(!isDown) return;
+    toggleBar(e)
+  })
+
+  speed.addEventListener('click', (e) => {
+    toggleBar(e)
+  })
+
+  function toggleBar(e) {
+    const percentage = (e.pageY - speed.offsetTop) / speed.offsetHeight
+    if (percentage >= 0) {
+      speedBar.style.height = `${ percentage * 100 }%`
+      const playbackRate = (percentage * 4).toFixed(2)
+      speedBar.innerHTML = `${ playbackRate }x`
+      video['playbackRate'] = playbackRate
+    }
+  }
 </script>
 </body>
 </html>
