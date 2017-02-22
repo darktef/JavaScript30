@@ -46,8 +46,11 @@
   function toggleBar(e) {
     const percentage = (e.pageY - speed.offsetTop) / speed.offsetHeight
     if (percentage >= 0) {
+      // We could use Math.round as well
+      const min = 0.4
+      const max = 4
       speedBar.style.height = `${ percentage * 100 }%`
-      const playbackRate = (percentage * 4).toFixed(2)
+      const playbackRate = (percentage * (max - min) + min).toFixed(2)
       speedBar.innerHTML = `${ playbackRate }x`
       video['playbackRate'] = playbackRate
     }
